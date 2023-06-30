@@ -9,6 +9,21 @@ class RegistrFormPage extends StatefulWidget {
 
 class _RegistrFormPageState extends State<RegistrFormPage> {
   bool _hidePass = true;
+  final _nameController = TextEditingController();
+  final _phoneController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _storyController = TextEditingController();
+
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _phoneController.dispose();
+    _emailController.dispose();
+    _storyController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,6 +36,7 @@ class _RegistrFormPageState extends State<RegistrFormPage> {
           padding: EdgeInsets.all(16.0),
           children: [
             TextField(
+              controller: _nameController,
               decoration: InputDecoration(
                 labelText: "Full Name *",
                 hintText: "What do people call you?",
@@ -47,6 +63,7 @@ class _RegistrFormPageState extends State<RegistrFormPage> {
               height: 10,
             ),
             TextFormField(
+              controller: _phoneController,
               decoration: InputDecoration(
                 labelText: "Phone number *",
                 hintText: "Where can we reach you?",
@@ -79,6 +96,7 @@ class _RegistrFormPageState extends State<RegistrFormPage> {
               height: 10,
             ),
             TextFormField(
+              controller: _emailController,
               decoration: InputDecoration(
                 labelText: "Email address ",
                 hintText: "Enter a email address",
@@ -90,6 +108,7 @@ class _RegistrFormPageState extends State<RegistrFormPage> {
               height: 10,
             ),
             TextFormField(
+              controller: _storyController,
               decoration: InputDecoration(
                 labelText: "Life Story ",
                 hintText: "Tell us about yourself",
@@ -132,7 +151,7 @@ class _RegistrFormPageState extends State<RegistrFormPage> {
               height: 15,
             ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: _submitForm,
               child: Text(
                 "Submit Form",
                 style: TextStyle(color: Colors.white),
@@ -146,4 +165,11 @@ class _RegistrFormPageState extends State<RegistrFormPage> {
       ),
     );
   }
+  void _submitForm() {
+    print("Name : ${_nameController.text}");
+    print("Phone : ${_phoneController.text}");
+    print("Email : ${_emailController.text}");
+    print("Story : ${_storyController.text}");
+  }
 }
+
