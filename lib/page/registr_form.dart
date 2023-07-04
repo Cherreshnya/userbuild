@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/src/widgets/form.dart';
+
 
 
 class RegistrFormPage extends StatefulWidget {
@@ -9,10 +11,14 @@ class RegistrFormPage extends StatefulWidget {
 
 class _RegistrFormPageState extends State<RegistrFormPage> {
   bool _hidePass = true;
+  final _formKey = GlobalKey<FormState>();
+  
   final _nameController = TextEditingController();
   final _phoneController = TextEditingController();
   final _emailController = TextEditingController();
   final _storyController = TextEditingController();
+  final _passController = TextEditingController();
+  final _confirmController = TextEditingController();
 
 
   @override
@@ -21,6 +27,8 @@ class _RegistrFormPageState extends State<RegistrFormPage> {
     _phoneController.dispose();
     _emailController.dispose();
     _storyController.dispose();
+    _passController.dispose();
+    _confirmController.dispose();
     super.dispose();
   }
 
@@ -32,10 +40,11 @@ class _RegistrFormPageState extends State<RegistrFormPage> {
         centerTitle: true,
       ),
       body: Form(
+        key: _formKey,
         child: ListView(
           padding: EdgeInsets.all(16.0),
           children: [
-            TextField(
+            TextFormField(
               controller: _nameController,
               decoration: InputDecoration(
                 labelText: "Full Name *",
@@ -58,6 +67,7 @@ class _RegistrFormPageState extends State<RegistrFormPage> {
                   borderSide: BorderSide(color: Colors.blue, width: 2.0),
                 ),
               ),
+              validator: _validateName,
             ),
             SizedBox(
               height: 10,
@@ -89,8 +99,9 @@ class _RegistrFormPageState extends State<RegistrFormPage> {
               keyboardType: TextInputType.phone,
               inputFormatters: [
                 // only accept letters from a to z
-                FilteringTextInputFormatter(RegExp(r'[0-9]'), allow: true)
+                FilteringTextInputFormatter(RegExp(r'^[()\d -]{1,15}$'), allow: true)
               ],
+              validator: (value) => value== null || _validatePhoneNumber(value) ? null : "Phone number must be enter as (###) ###-#### ",
             ),
             SizedBox(
               height: 10,
@@ -100,8 +111,10 @@ class _RegistrFormPageState extends State<RegistrFormPage> {
               decoration: InputDecoration(
                 labelText: "Email address ",
                 hintText: "Enter a email address",
+
                 icon: Icon(Icons.mail),
               ),
+              validator: _validateEmail,
               keyboardType: TextInputType.emailAddress,
             ),
             SizedBox(
@@ -135,6 +148,8 @@ class _RegistrFormPageState extends State<RegistrFormPage> {
               ),
               obscureText: _hidePass,
               maxLength: 8,
+              controller: _passController,
+              validator: _validatePassword,
             ),
             SizedBox(
               height: 10,
@@ -146,6 +161,8 @@ class _RegistrFormPageState extends State<RegistrFormPage> {
               ),
               obscureText: _hidePass,
               maxLength: 8,
+              controller: _confirmController,
+              validator: _validatePassword,
             ),
             SizedBox(
               height: 15,
@@ -166,10 +183,47 @@ class _RegistrFormPageState extends State<RegistrFormPage> {
     );
   }
   void _submitForm() {
-    print("Name : ${_nameController.text}");
-    print("Phone : ${_phoneController.text}");
-    print("Email : ${_emailController.text}");
-    print("Story : ${_storyController.text}");
+    if(_formKey.currentState!.validate()) {
+      print("Form is valid");
+      print("Name : ${_nameController.text}");
+      print("Phone : ${_phoneController.text}");
+      print("Email : ${_emailController.text}");
+      print("Story : ${_storyController.text}");
+    }
+  }
+
+  String? _validateName(String? value) {
+    final _nameExp = RegExp(r'^[A-Za-z]+$');
+    if(value == null || value.isEmpty) {
+      return "Name is reqired";
+    } else if (!_nameExp.hasMatch(value)) {
+      return "Please enter alphabetical correct";
+     } else {
+      return null;
+    }
   }
 }
 
+bool _validatePhoneNumber(String input) {
+  final _phoneExp = RegExp(r'^\(\d\d\d\)\d\d\d-\d\d\d\d$');
+      return _phoneExp.hasMatch(input);
+}
+
+String? _validateEmail(String? value) {
+  if (value == null || value.isEmpty) {
+    return "Email can't be empty";
+  } else if (!value.contains("@")) {
+    return "Invalid email address";
+  }
+    return null;
+}
+
+String? _validatePassword(String? value) {
+  if(value == null || value.length != 8 ) {
+    return "8 character required for password";
+  } else if (!_confirmPassController.text != _passController.text) {
+    return "password does not match";
+  } else {
+    return null;
+  }
+}

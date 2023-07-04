@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'page/registr_form.dart';
 
+
 void main() {
   runApp(const MyApp());
 }
