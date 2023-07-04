@@ -221,7 +221,7 @@ String? _validateEmail(String? value) {
 String? _validatePassword(String? value) {
   if(value == null || value.length != 8 ) {
     return "8 character required for password";
-  } else if (!_confirmPassController.text != _passController.text) {
+  } else if (!_confirmController.text != _passController.text) {
     return "password does not match";
   } else {
     return null;
