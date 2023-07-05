@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/src/widgets/form.dart';
+
 
 
 
@@ -12,14 +12,13 @@ class RegistrFormPage extends StatefulWidget {
 class _RegistrFormPageState extends State<RegistrFormPage> {
   bool _hidePass = true;
   final _formKey = GlobalKey<FormState>();
-  
+
   final _nameController = TextEditingController();
   final _phoneController = TextEditingController();
   final _emailController = TextEditingController();
   final _storyController = TextEditingController();
   final _passController = TextEditingController();
   final _confirmController = TextEditingController();
-
 
   @override
   void dispose() {
@@ -31,6 +30,7 @@ class _RegistrFormPageState extends State<RegistrFormPage> {
     _confirmController.dispose();
     super.dispose();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -99,9 +99,13 @@ class _RegistrFormPageState extends State<RegistrFormPage> {
               keyboardType: TextInputType.phone,
               inputFormatters: [
                 // only accept letters from a to z
-                FilteringTextInputFormatter(RegExp(r'^[()\d -]{1,15}$'), allow: true)
+                FilteringTextInputFormatter(
+                    RegExp(r'^[()\d -]{1,15}$'), allow: true)
               ],
-              validator: (value) => value== null || _validatePhoneNumber(value) ? null : "Phone number must be enter as (###) ###-#### ",
+              validator: (value) =>
+              value == null || _validatePhoneNumber(value)
+                  ? null
+                  : "Phone number must be enter as (###) ###-#### ",
             ),
             SizedBox(
               height: 10,
@@ -138,7 +142,8 @@ class _RegistrFormPageState extends State<RegistrFormPage> {
                 labelText: "Password",
                 hintText: "Enter password",
                 suffixIcon: IconButton(
-                  icon: Icon(_hidePass ? Icons.visibility : Icons.visibility_off),
+                  icon: Icon(
+                      _hidePass ? Icons.visibility : Icons.visibility_off),
                   onPressed: () {
                     setState(() {
                       _hidePass = !_hidePass;
@@ -182,8 +187,9 @@ class _RegistrFormPageState extends State<RegistrFormPage> {
       ),
     );
   }
+
   void _submitForm() {
-    if(_formKey.currentState!.validate()) {
+    if (_formKey.currentState!.validate()) {
       print("Form is valid");
       print("Name : ${_nameController.text}");
       print("Phone : ${_phoneController.text}");
@@ -194,36 +200,37 @@ class _RegistrFormPageState extends State<RegistrFormPage> {
 
   String? _validateName(String? value) {
     final _nameExp = RegExp(r'^[A-Za-z]+$');
-    if(value == null || value.isEmpty) {
+    if (value == null || value.isEmpty) {
       return "Name is reqired";
     } else if (!_nameExp.hasMatch(value)) {
       return "Please enter alphabetical correct";
-     } else {
+    } else {
       return null;
     }
   }
-}
 
-bool _validatePhoneNumber(String input) {
-  final _phoneExp = RegExp(r'^\(\d\d\d\)\d\d\d-\d\d\d\d$');
-      return _phoneExp.hasMatch(input);
-}
 
-String? _validateEmail(String? value) {
-  if (value == null || value.isEmpty) {
-    return "Email can't be empty";
-  } else if (!value.contains("@")) {
-    return "Invalid email address";
+  bool _validatePhoneNumber(String input) {
+    final _phoneExp = RegExp(r'^\(\d\d\d\)\d\d\d-\d\d\d\d$');
+    return _phoneExp.hasMatch(input);
   }
-    return null;
-}
 
-String? _validatePassword(String? value) {
-  if(value == null || value.length != 8 ) {
-    return "8 character required for password";
-  } else if (!_confirmController.text != _passController.text) {
-    return "password does not match";
-  } else {
+  String? _validatePassword(String? value) {
+    if (_passController.text.length != 8) {
+      return "8 character required for password";
+    } else if (_confirmController.text != _passController.text) {
+      return "password does not match";
+    } else {
+      return null;
+    }
+  }
+
+  String? _validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      return "Email can't be empty";
+    } else if (!value.contains("@")) {
+      return "Invalid email address";
+    }
     return null;
   }
 }
